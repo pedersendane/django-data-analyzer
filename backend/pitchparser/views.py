@@ -22,7 +22,7 @@ class PitchParserView():
     #topTen = extract_top_ten_symbols_from_volume(volume)
     #for symbol, value in topTen:
            # print ("{} {}".format(symbol, value))
-    return JsonResponse(data, safe=False)
+    return JsonResponse(data, safe=False, status=200)
     #return JsonResponse(json.dumps(['data', data]), safe=False)
 
     
