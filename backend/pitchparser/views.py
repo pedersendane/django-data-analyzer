@@ -22,7 +22,8 @@ class PitchParserView():
     #topTen = extract_top_ten_symbols_from_volume(volume)
     #for symbol, value in topTen:
            # print ("{} {}".format(symbol, value))
-    return JsonResponse(data)
+    return JsonResponse(data, safe=False)
+    #return JsonResponse(json.dumps(['data', data]), safe=False)
 
     
 
@@ -227,7 +228,6 @@ def pitch_parser(iterable):
         }
         message_types.append(retail_price_improvement)
 
-  print(message_types.count(message_type))
   return message_types
 
 
@@ -236,6 +236,12 @@ def extract_top_ten_symbols_from_volume(volume):
   Takes a volume and returns a tuple of the first ten symbols by
   executed volume
   """
+  symbol_clear = {
+            'message_type': 'T',
+            'message_type_full_name': 'Full Test',
+            'stock_symbol': 'yes',
+        }
+  
   sorted_volume = sorted(
       volume.items(), key=operator.itemgetter(1), reverse=True
   )
