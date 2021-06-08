@@ -12,6 +12,6 @@ If `pipenv` is not installed, install it first following these steps https://pyp
 
 ## Run the application
 Open two terminals. Navigate one to the `frontend` directory, and the other in the `backend` directory.
-1. In the backend directory while sourced in the virtual environment, run `[python manage.py runserver]`
+1. In the backend directory while sourced in the virtual environment, run `python manage.py runserver`
 2. In the frontend directory, run `npm run start`
 
