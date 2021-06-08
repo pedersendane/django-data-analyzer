@@ -2,7 +2,7 @@ from django.db import models
 
 class FileUpload(models.Model):
     title = models.CharField(max_length=200)
-    file = models.FileField(upload_to='files/uploaded-files/')
+    file = models.FileField()
       
     def __str__(self):
         return self.title

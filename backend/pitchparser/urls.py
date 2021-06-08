@@ -4,6 +4,6 @@ from . import views
 app_name = 'pitchparser'
 urlpatterns = [
     # /fileupload/
-    path('<title>', views.PitchParserView),
-
+    path('', views.PitchParserView.index),
+    path('<str:title>', views.PitchParserView.detail)
 ]
