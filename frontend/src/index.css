@@ -11,20 +11,72 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #282c34;
 }
-.todo-title {
+
+#nav {
+  background-color: #161b22;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+
+  @media (max-width: 678px) {
+    width: 100vw;
+  }
+}
+
+#navImage {
+  margin: 20px 50px 20px 7%;
+  width: 35%;
+  object-fit: contain;
+  z-index: 10;
+  cursor: pointer;
+
+  @media (max-width: 1250px) {
+    margin: 20px 50px 20px 5%;
+  }
+}
+
+.hover {
   cursor: pointer;
 }
-.completed-todo {
-  text-decoration: line-through;
+
+#navLinkContainer {
+  display: flex;
+  flex-flow: row nowrap;
+  position: absolute;
+  width: 90%;
+  justify-content: flex-end;
+  margin-top: 0px;
+  align-items: center;
+  font-size: 18px;
+  margin-left: 20px;
+
+  @media (max-width: 768px) {
+    flex-flow: column nowrap;
+    background-color: #fdfdfdfa;
+    position: fixed;
+    top: -16px;
+    right: 0;
+    height: 100%;
+    width: 180px;
+    padding-top: 3.5rem;
+    transition: transform 0.3s ease-in-out;
+    z-index: 9;
+    justify-content: normal;
+  }
 }
-.tab-list > span {
-  padding: 5px 8px;
-  border: 1px solid #282c34;
-  border-radius: 10px;
-  margin-right: 5px;
+
+.navLink {
+  padding: 2%;
+  font-weight: bolder;
+  text-decoration: none;
+  text-transform: none;
+  color: #0d6efd;
   cursor: pointer;
 }
-.tab-list > span.active {
-  background-color: #282c34;
-  color: #ffffff;
+.navLink:hover {
+  color: white;
+  border: 1px solid white;
 }
+
