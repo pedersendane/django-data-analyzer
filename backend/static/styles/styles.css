@@ -1,0 +1,19 @@
+#file-upload{
+    display: flex; 
+    align-items: center; 
+    justify-content:space-between; 
+    flex-direction: column; 
+    flex-wrap: wrap;
+}
+#file-upload-input-container{
+   display: flex; 
+   justify-content: flex-start;
+}
+#file-upload-button-container{
+    display: flex; 
+    justify-content: 
+    center; padding-top: 2em;
+}
+.grouped-items{
+    padding-bottom: 2em;
+}

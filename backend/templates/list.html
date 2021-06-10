@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card mb-4">
+<div class="card-body">
+{% if list %}
+{% for file in list %}
+<a href={{file}}>{{file}}</a>
+{% endfor %}
+{% else %}
+<h2>Sorry, no files found</h2>
+<p>Click <a href="/upload-file">here</a> to upload a file.</p>
+{% endif %}
+</div>
+</div>
+{% endblock%}

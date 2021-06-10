@@ -1,1 +1,54 @@
-<p>This Page Only allows posts</p>
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="text-center text-capitalize">File Upload</h2>
+<p class="text-center">Please upload a PITCH data file to be analyzed</p>
+<form method="post" enctype="multipart/form-data" id="file-upload">
+  {% csrf_token %}
+  <div id="file-upload-input-container" class="flex-row">
+    <input id="file-upload-input" type="file" name="file">
+  </div>
+
+  <div class="flex-row" id="file-upload-button-container">
+    <button id="file-upload-button" class="btn-secondary" type="button">
+      Upload File
+    </button>
+  </div>
+
+</form>
+
+<script>
+  let fileInput = document.getElementById('file-upload-input');
+  let submitButton = document.getElementById('file-upload-button');
+  fileInput.addEventListener('change', function () {
+    var fileExtension = getFileExtension(this.value);
+    if(fileExtension){
+      alert('Please select a PITCH data file');
+      fileInput.value = null;
+      if(submitButton.getAttribute('type') === 'submit'){
+        submitButton.setAttribute('type', 'button');
+        submitButton.classList.remove('btn-primary');
+        submitButton.classList.add('btn-secondary');
+      }
+    } 
+    else {
+      if (submitButton.getAttribute('type') !== 'submit') {
+      submitButton.setAttribute('type', 'submit');
+      submitButton.classList.remove('btn-secondary');
+      submitButton.classList.add('btn-primary');
+      }
+    }
+
+    
+  })
+  submitButton.addEventListener('click', function () {
+    if (this.type !== 'submit') {
+      alert('Please select a file to upload')
+    }
+  })
+  function getFileExtension(filename) {
+    return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename) : undefined;
+  }
+</script>
+{% endblock %}

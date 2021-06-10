@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card mb-4">
+  <div class="card-body">
+    <h2 class="text-center">File: {{file}}</h2>
+    <hr />
+    <button id="changeGraphButton" class="btn-primary" type="button" value="bar">Show as Pie Chart</button>
+    <div class="row">
+      <div class="col-md-12">
+        <canvas id="myBarGraph"></canvas>
+        <canvas id="myPieChart" style="display: none;"></canvas>
+      </div>
+    </div>
+    {% regroup counts|dictsortreversed:"count" by count as grouped_count %}
+    {% for item in grouped_count %}
+    <div class="grouped-items">
+      <ul>
+        {% for i in item.list %}
+        {% if i.name == 'Total Count'%}
+        <h4 class="text-center text-black-50" style="color: black;">Total:
+
+          <!-- 1 and only result with that number  -->
+          {% elif forloop.first and forloop.last%}
+          <li><b><span class="item-name" style="cursor: pointer;">{{i.name}}</span></b>
+
+            <!-- First of multiple -->
+            {% elif forloop.first and not forloop.last%}
+          <li><b><span class="item-name" style="cursor: pointer;">{{i.name}}</span></b>,
+
+            <!-- Not the first, but the last with that number  -->
+            {% elif forloop.last%}
+            <b><span class="item-name" style="cursor: pointer;">{{i.name}}</span></b>
+
+            <!-- Second to last of multiple -->
+            {% elif forloop.revcounter == 2 %}
+            <b><span class="item-name" style="cursor: pointer;">{{i.name}}</span></b> and
+
+            <!-- All in between -->
+            {% else %}
+            <b><span class="item-name" style="cursor: pointer;">{{i.name}}</span></b>,
+
+            {% endif %}
+            {% endfor %}
+            {{item.grouper}} messages
+          </li>
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% for message in counts|dictsortreversed:"count"%}
+<div class="card mb-4">
+  <div class="card-body" style="padding-top: 2em;">
+    <h2 >{{ message.name }}</h2>
+    <div id="{{message.name}}" class="message-details"></div>
+  </div>
+</div>
+{% endfor %}
+
+{{ data|json_script:"data" }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+  const jsonData = JSON.parse(document.getElementById('data').textContent);
+  const counts = jsonData.counts;
+  let resultsWithData = [];
+  for (var i in jsonData) {
+    if (jsonData[i].length > 0) {
+      resultsWithData.push(jsonData[i])
+    }
+  }
+  
+  var itemNames = document.querySelectorAll('.item-name');
+  for (var x in itemNames) {
+    if (itemNames[x].nodeName === 'SPAN') {
+      itemNames[x].addEventListener('click', function () {
+        console.log(this.innerText);
+        var scrollId = document.getElementById(this.innerText);
+        scrollId.scrollIntoView();
+      })
+    }
+  }
+  
+  var labels = [];
+  var chartCounts = [];
+  var maxCount = 0;
+  var j = 0;
+  for (i in counts) {
+    if (counts[i].name !== 'Total Count') {
+      labels.push(counts[i].name);
+      chartCounts.push(counts[i].count);
+      if (j === 0) {
+        maxCount = counts[i].count;
+      } else {
+        if (counts[i].count > maxCount) {
+          maxCount = counts[i].count;
+        }
+      }
+      j++
+    }
+  }
+  let barGraph = document.getElementById('myBarGraph');
+  let pieChart = document.getElementById('myPieChart');
+  function drawBarGraph(data) {
+    var chartLabel = 'File Breakdown'
+    var chartdata = chartCounts;
+    var ctx = barGraph;
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: chartLabel,
+          data: chartdata,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+  }
+
+
+  function drawPieGraph(data) {
+    var chartLabel = 'File Breakdown'
+    var chartdata = chartCounts;
+    var ctx = pieChart;
+    var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: chartLabel,
+          data: chartdata,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Chart.js Pie Chart'
+          }
+        }
+      },
+    });
+  }
+
+  drawBarGraph(data);
+  drawPieGraph(data);
+  document.getElementById('changeGraphButton').addEventListener('click', function () {
+    console.log(this.value);
+    if (this.value === 'bar') {
+      barGraph.style.display = 'none';
+      pieChart.style.display = 'block';
+      this.value = 'pie';
+      this.innerText = 'Show as Bar Graph';
+    } else {
+      pieChart.style.display = 'none';
+      barGraph.style.display = 'block';
+      this.value = 'bar';
+      this.innerText = 'Show as Pie Chart'
+    }
+  })
+  //drawPieGraph(data, 'myChartBar')
+  let details = document.querySelectorAll('.message-details');
+  function populateDetails(json) {
+    for(var array in json){
+      var json2 = json[array]
+      for(var array2 in json2){
+        document.getElementById(json2[array2].message_type_full_name).innerHTML += `<p>${json2[array2]}</p>`
+      }
+    }
+  }
+  //populateDetails(resultsWithData)
+
+</script>
+{% endblock %}
