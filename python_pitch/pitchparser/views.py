@@ -260,7 +260,6 @@ def pitch_parser(iterable):
         retail_price_improvement_count += 1
 
   total_count = (retail_price_improvement_count + trade_count + add_order_count + trade_long_count + trade_break_count + order_cancel_count + symbol_clear_count + add_order_long_count + auction_update_count + order_executed_count + trading_status_count + auction_summary_count)
-  print(total_count)
   counter = (
     {'name':'Total Count' , 'count': total_count},
     {'name': 'Symbol Clear', 'count': symbol_clear_count},

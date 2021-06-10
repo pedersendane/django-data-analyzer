@@ -19,7 +19,7 @@ If `pipenv` is not installed, install it first following these steps https://pyp
 4. Run ```python --version``` and verify that you have AT LEAST python 3 running on your virtual environment. I attempted it with multiple versions of python, and it will break with if it is any version of python 2. I am running it with python 3.7.5 perfectly, so if you run into any errors please try to upgrade your python version. 
 
 ## Run the application
-1. run `python manage.py collectstatic`
-2. `cd python_pitch`, and run `python manage.py runserver`
+1. `cd python_pitch` and run `python manage.py collectstatic`
+2. run `python manage.py runserver`
 
 

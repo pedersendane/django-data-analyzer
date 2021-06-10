@@ -87,9 +87,7 @@
   const trading_status = jsonData.trading_status;
   const symbol_clear = jsonData.symbol_clear;
   const retail_price_improvement = jsonData.retail_price_improvement;
-  console.log(auction_update[0])
-  console.log(auction_summary[0])
-  console.log(retail_price_improvement[0])
+  
 
 
   //get number of buy and sell orders
@@ -225,8 +223,8 @@
     let add_order_sell_shares = numberWithCommas(getTotalShares(add_order_sell));
     add_order_div.innerHTML += `<canvas id="Add Order bar graph"></canvas>`
     add_order_div.innerHTML += `<ul>`
-    add_order_div.innerHTML += `<li class="text-center">${getAddOrderBuySell().S} <b>SELL</b> orders for a total of ${add_order_sell_shares} shares and $${totalSellPrices}.</li>`;
-    add_order_div.innerHTML += `<li class="text-center">${getAddOrderBuySell().B} <b>BUY</b> orders for a total of  ${add_order_buy_shares} shares and $${totalBuyPrices}.</li>`;
+    add_order_div.innerHTML += `<li class="text-center">${getAddOrderBuySell().S === undefined ? 0 : getAddOrderBuySell().S} <b>SELL</b> orders for a total of ${add_order_sell_shares} shares and $${totalSellPrices}.</li>`;
+    add_order_div.innerHTML += `<li class="text-center">${getAddOrderBuySell().B === undefined ? 0 : getAddOrderBuySell().B} <b>BUY</b> orders for a total of  ${add_order_buy_shares} shares and $${totalBuyPrices}.</li>`;
     add_order_div.innerHTML += `</ul>`;
     add_order_div.innerHTML += `<hr />`;
     add_order_div.innerHTML += `<canvas id="Add Order bar graph 2"></canvas>`
@@ -251,8 +249,8 @@
     let add_order_long_sell_shares = numberWithCommas(getTotalShares(add_order_long_sell));
     add_order_long_div.innerHTML += `<canvas id="Add Order (Long) bar graph"></canvas>`
     add_order_long_div.innerHTML += `<ul>`
-    add_order_long_div.innerHTML += `<li>${getAddOrderLongBuySell().S} <b>SELL</b> orders for a total of ${add_order_long_sell_shares} shares and $${totalLongSellPrices}.</li>`;
-    add_order_long_div.innerHTML += `<li>${getAddOrderLongBuySell().B} <b>BUY</b> orders for a total of  ${add_order_long_buy_shares} shares and $${totalLongBuyPrices}.</li>`;
+    add_order_long_div.innerHTML += `<li>${getAddOrderLongBuySell().S === undefined ? 0 : getAddOrderLongBuySell().S} <b>SELL</b> orders for a total of ${add_order_long_sell_shares} shares and $${totalLongSellPrices}.</li>`;
+    add_order_long_div.innerHTML += `<li>${getAddOrderLongBuySell().B === undefined ? 0 : getAddOrderLongBuySell().B} <b>BUY</b> orders for a total of  ${add_order_long_buy_shares} shares and $${totalLongBuyPrices}.</li>`;
     add_order_long_div.innerHTML += `</ul>`;
     add_order_long_div.innerHTML += `<hr />`;
     add_order_long_div.innerHTML += `<canvas id="Add Order (Long) bar graph 2"></canvas>`
@@ -621,7 +619,6 @@
     let auction_summaryTopTenAuctionTypes = getAuctionTypeCounts(auction_summary)
     auctionNames = [];
     auctionCounts = [];
-    console.log(auction_summaryTopTenAuctionTypes)
     for (var i in auction_summaryTopTenAuctionTypes) {
       auctionNames.push(auction_summaryTopTenAuctionTypes[i].auction);
       auctionCounts.push(auction_summaryTopTenAuctionTypes[i].auction_count);
@@ -644,7 +641,6 @@
 
   //add button logic to change graphs
   document.getElementById('changeGraphButton').addEventListener('click', function () {
-    console.log(this.value);
     if (this.value === 'bar') {
       barGraph.style.display = 'none';
       pieChart.style.display = 'block';
