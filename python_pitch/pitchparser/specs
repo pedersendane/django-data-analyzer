@@ -9,8 +9,8 @@ Msg Type   | 8      | 1      | "s"       | Sybol Clear Message
 Stk Symbl  | 9      | 8      | ASCII     | Stock Symbol Right Padded with spaces
 
 Example:
-[28800011][A][AK27GA0000DT][S][000100][SH    ][0000619200][Y]
-
+[28800011][s][SHA     ]
+28800011sSHA     
 
 
 
@@ -51,8 +51,8 @@ Display    | 46     | 1      | Alpha     | "Y" = Displayed in SIP
 Partic ID    | 47     | 4      | Alpha     | "Y" = Displayed in SIP
 
 Example:
-[28800011][A][AK27GA0000DT][S][000100][SH    ][0000619200][Y]
-
+[28800011][d][AK27GA0000DT][S][000100][SH      ][0000619200][Y]
+28800011dAK27GA0000DTS000100SH      0000619200Y
 
 
 
@@ -125,8 +125,8 @@ Price      | 36     | 10     | Price     | Execution Price
 Exc Id     | 46     | 12     | Base 36   | Cboe generated day-unique execution identifier of this trade. Execution ID is also referenced in the Trade Break message
 
 Example:
-[28800318][E][AK27GA0000DT][000050][00001AQ00001]
-
+[28800318][r][AK27GA0000DT][B][000050][SHA     ][0000005678][00001AQ00001]
+S28800318rAK27GA0000DTB000050SHA     000000567800001AQ00001
 
 
 
@@ -143,8 +143,8 @@ Msg Type   | 8      | 1      | "B"       | Execute Order
 Exc Id     | 9      | 12     | Base 36   | Cboe generated day-unique execution identifier of this trade. Execution ID is also referenced in the Trade Break message
 
 Example:
-[28800318][E][AK27GA0000DT][000050][00001AQ00001]
-
+[28800318][B][AK27GA0000DT]
+28800318BAK27GA0000DT
 
 
 TRADING STATUS
@@ -160,8 +160,8 @@ Reserved2  | 20     | 1      | Alpha     | Reserved
 
 
 Example:
-[28800318][E][AK27GA0000DT][000050][00001AQ00001]
-
+[28800318][H][SHA     ][H][0][a][a]
+28800318HSHA     H0aa
 
 
 
@@ -180,7 +180,8 @@ Buy Shares | 58     | 10      | Price     | Price at which the auction book woul
 
 
 Example:
-[28800318][E][AK27GA0000DT][000050][00001AQ00001]
+[28800318][I][SHA     ][O][0000002277][0000002277][0000002277][0000002277][0000002277]
+28800318ISHA     O00000022770000002277000000227700000022770000002277
 
 
 
@@ -200,8 +201,8 @@ Shares     | 28     | 10     | Numeric   | Number of shares executed during the 
 
 
 Example:
-[28800318][E][AK27GA0000DT][000050][00001AQ00001]
-
+[28800318][J][SHA     ][O][0000055555][0000000099]
+28800318JSHAO00000555550000000099
 
 
 
@@ -217,8 +218,8 @@ Stck Sybol | 9      | 8      | ASCII     | Symbol
 RPI        | 17     | 1      | Alpha     | "B", "S", "A", "N"
 
 Example:
-[28800318][E][AK27GA0000DT][000050][00001AQ00001]
-
+[28800318][R][SHA     ][S]
+28800318RSHA     S
 
 
 

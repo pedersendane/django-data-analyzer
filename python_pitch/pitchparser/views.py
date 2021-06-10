@@ -11,9 +11,9 @@ import argparse
 def upload_list(request):
   file_list = [] 
   media_path = os.path.join(settings.MEDIA_ROOT, '')
-  for file in os.listdir(media_path):
-    file_list.append(file)
-    print(file)
+  if(os.path.exists(media_path)):
+    for file in os.listdir(media_path):
+      file_list.append(file)
   return render(request, 'list.html', {'list': file_list})
     
 
