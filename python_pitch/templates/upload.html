@@ -2,15 +2,15 @@
 
 {% block content %}
 
-<h2 class="text-center text-capitalize">File Upload</h2>
-<p class="text-center">Please upload a PITCH data file to be analyzed</p>
+<h2>File Upload</h2>
+<p>Please upload a PITCH data file to be analyzed</p>
 <form method="post" enctype="multipart/form-data" id="file-upload">
   {% csrf_token %}
   <div id="file-upload-input-container" class="flex-row">
     <input id="file-upload-input" type="file" name="file">
   </div>
 
-  <div class="flex-row" id="file-upload-button-container">
+  <div class="flex-row" id="file-upload-button-container" style="padding-top: 2%;">
     <button id="file-upload-button" class="btn-secondary" type="button">
       Upload File
     </button>

@@ -22,7 +22,7 @@
 
           <!-- 1 and only result with that number  -->
           {% elif forloop.first and forloop.last%}
-          <li><b><span class="item-name" style="cursor: pointer; color: #0056b3">{{i.name}}</span></b>
+          <li><b><span class="item-name" style="cursor: pointer; color: #0056b3">{{i.name}}:</span></b>
 
             <!-- First of multiple -->
             {% elif forloop.first and not forloop.last%}
@@ -30,7 +30,7 @@
 
             <!-- Not the first, but the last with that number  -->
             {% elif forloop.last%}
-            <b><span class="item-name" style="cursor: pointer; color: #0056b3">{{i.name}}</span></b>
+            <b><span class="item-name" style="cursor: pointer; color: #0056b3">{{i.name}}:</span></b>
 
             <!-- Second to last of multiple -->
             {% elif forloop.revcounter == 2 %}
@@ -225,8 +225,8 @@
     let add_order_sell_shares = numberWithCommas(getTotalShares(add_order_sell));
     add_order_div.innerHTML += `<canvas id="Add Order bar graph"></canvas>`
     add_order_div.innerHTML += `<ul>`
-    add_order_div.innerHTML += `<li>${getAddOrderBuySell().S} <b>SELL</b> orders for a total of ${add_order_sell_shares} shares and $${totalSellPrices}.</li>`;
-    add_order_div.innerHTML += `<li>${getAddOrderBuySell().B} <b>BUY</b> orders for a total of  ${add_order_buy_shares} shares and $${totalBuyPrices}.</li>`;
+    add_order_div.innerHTML += `<li class="text-center">${getAddOrderBuySell().S} <b>SELL</b> orders for a total of ${add_order_sell_shares} shares and $${totalSellPrices}.</li>`;
+    add_order_div.innerHTML += `<li class="text-center">${getAddOrderBuySell().B} <b>BUY</b> orders for a total of  ${add_order_buy_shares} shares and $${totalBuyPrices}.</li>`;
     add_order_div.innerHTML += `</ul>`;
     add_order_div.innerHTML += `<hr />`;
     add_order_div.innerHTML += `<canvas id="Add Order bar graph 2"></canvas>`
