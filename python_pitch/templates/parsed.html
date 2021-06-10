@@ -22,23 +22,23 @@
 
           <!-- 1 and only result with that number  -->
           {% elif forloop.first and forloop.last%}
-          <li><b><span class="item-name" style="cursor: pointer;">{{i.name}}</span></b>
+          <li><b><span class="item-name" style="cursor: pointer; color: #0056b3">{{i.name}}</span></b>
 
             <!-- First of multiple -->
             {% elif forloop.first and not forloop.last%}
-          <li><b><span class="item-name" style="cursor: pointer;">{{i.name}}</span></b>,
+          <li><b><span class="item-name" style="cursor: pointer; color: #0056b3">{{i.name}}</span></b>,
 
             <!-- Not the first, but the last with that number  -->
             {% elif forloop.last%}
-            <b><span class="item-name" style="cursor: pointer;">{{i.name}}</span></b>
+            <b><span class="item-name" style="cursor: pointer; color: #0056b3">{{i.name}}</span></b>
 
             <!-- Second to last of multiple -->
             {% elif forloop.revcounter == 2 %}
-            <b><span class="item-name" style="cursor: pointer;">{{i.name}}</span></b> and
+            <b><span class="item-name" style="cursor: pointer; color: #0056b3">{{i.name}}</span></b> and
 
             <!-- All in between -->
             {% else %}
-            <b><span class="item-name" style="cursor: pointer;">{{i.name}}</span></b>,
+            <b><span class="item-name" style="cursor: pointer; color: #0056b3">{{i.name}}</span></b>,
 
             {% endif %}
             {% endfor %}

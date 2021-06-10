@@ -3,9 +3,11 @@
 <div class="card mb-4">
 <div class="card-body">
 {% if list %}
+<ul>
 {% for file in list %}
-<a href={{file}}>{{file}}</a>
+<li><a href={{file}}>{{file}}</a></li>
 {% endfor %}
+</ul>
 {% else %}
 <h2>Sorry, no files found</h2>
 <p>Click <a href="/upload-file">here</a> to upload a file.</p>
