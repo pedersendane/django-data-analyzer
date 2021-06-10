@@ -85,7 +85,7 @@ def pitch_parser(iterable):
           'site_indicator': site_indicator,
           'shares': int(shares),
           'stock_symbol': stock_symbol,
-          'price': price,
+          'price': int(price),
           'display': display
         }
         message_types['add_order'].append(ao)
@@ -122,7 +122,7 @@ def pitch_parser(iterable):
           'message_type': message_type,
           'message_type_full_name': message_type_full_name,
           'order_id': order_id,
-          'executed_shares': executed_shares
+          'executed_shares': int(executed_shares)
         }
         message_types['order_executed'].append(oe)
         order_executed_count += 1
@@ -135,7 +135,7 @@ def pitch_parser(iterable):
         'message_type': message_type,
         'message_type_full_name': message_type_full_name,
         'order_id': order_id,
-        'canceled_shares': canceled_shares
+        'canceled_shares': int(canceled_shares)
         }
         message_types['order_cancel'].append(oc)
         order_cancel_count += 1
@@ -152,9 +152,9 @@ def pitch_parser(iterable):
           'message_type_full_name': message_type_full_name,
           'order_id': order_id,
           'site_indicator': site_indicator,
-          'shares': shares,
+          'shares': int(shares),
           'stock_symbol': stock_symbol,
-          'price': price
+          'price': int(price)
         }
         message_types['trade'].append(trade)
         trade_count += 1
@@ -171,9 +171,9 @@ def pitch_parser(iterable):
           'message_type_full_name': message_type_full_name,
           'order_id': order_id,
           'site_indicator': site_indicator,
-          'shares': shares,
+          'shares': int(shares),
           'stock_symbol': stock_symbol,
-          'price': price
+          'price': int(price)
         }
         message_types['trade_long'].append(tl)
         trade_long_count += 1
@@ -219,11 +219,11 @@ def pitch_parser(iterable):
           'message_type_full_name': message_type_full_name,
           'stock_symbol': stock_symbol,
           'auction_type': auction_type,
-          'ref_price': ref_price,
-          'buy_shares': buy_shares,
-          'sell_shares': sell_shares,
-          'indicative_price': indicative_price,
-          'auction_only_price': auction_only_price,
+          'ref_price': int(ref_price),
+          'buy_shares': int(buy_shares),
+          'sell_shares': int(sell_shares),
+          'indicative_price': int(indicative_price),
+          'auction_only_price': int(auction_only_price),
         }
         message_types['auction_update'].append(au)
         auction_update_count += 1
@@ -240,8 +240,8 @@ def pitch_parser(iterable):
           'message_type_full_name': message_type_full_name,
           'stock_symbol': stock_symbol,
           'auction_type': auction_type,
-          'price': price,
-          'shares': shares,
+          'price': int(price),
+          'shares': int(shares),
         }
         message_types['auction_summary'].append(aucsum)
         auction_summary_count += 1

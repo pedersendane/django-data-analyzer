@@ -49,113 +49,182 @@
     {% endfor %}
   </div>
 </div>
+<h2 class="text-center" style="padding: 1em;">Breakdown by message type</h2>
 
 {% for message in counts|dictsortreversed:"count"%}
+{% if message.count > 0 and message.name != 'Total Count' %}
 <div class="card mb-4">
   <div class="card-body" style="padding-top: 2em;">
-    <h2 >{{ message.name }}</h2>
-    <div id="{{message.name}}" class="message-details"></div>
+    <div class="col-md-12">
+      <h4 class="text-center">{{message.name}}</h4>
+      <h5 class="text-center">{{message.count}} messages</h5>
+      <hr />
+      <div id="{{message.name}}"></div>
+    </div>
   </div>
 </div>
+{% endif %}
 {% endfor %}
 
+
 {{ data|json_script:"data" }}
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script>
+  //get json data, parse it, and set letiables
   const jsonData = JSON.parse(document.getElementById('data').textContent);
   const counts = jsonData.counts;
-  let resultsWithData = [];
-  for (var i in jsonData) {
-    if (jsonData[i].length > 0) {
-      resultsWithData.push(jsonData[i])
-    }
+  const add_order = jsonData.add_order;
+  const add_order_long = jsonData.add_order_long;
+  const auction_summary = jsonData.auction_summary;
+  const auction_update = jsonData.auction_update;
+  const order_cancel = jsonData.order_cancel;
+  const order_executed = jsonData.order_executed;
+  const trade = jsonData.trade;
+  const trade_long = jsonData.trade_long;
+  const trade_break = jsonData.trade_break;
+  const trading_status = jsonData.trading_status;
+  const symbol_clear = jsonData.symbol_clear;
+  const retail_price_improvement = jsonData.retail_price_improvement;
+  console.log(order_executed[0])
+  //get number of buy and sell orders
+  function getAddOrderBuySell() {
+    let add_order_buy_sell = add_order.reduce(function (obj, v) {
+      obj[v.site_indicator] = (obj[v.site_indicator] || 0) + 1;
+      return obj;
+    }, {})
+    return add_order_buy_sell;
   }
-  
-  var itemNames = document.querySelectorAll('.item-name');
-  for (var x in itemNames) {
+
+  //add up all of the prices in a given array 
+  function getTotalBuySellPrices(items) {
+    return items.reduce((total, item) => item.price + total, 0)
+  }
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  //add up number of shares
+  function getTotalShares(items) {
+    return items.reduce((total, item) => item.shares + total, 0)
+  }
+
+  //get number of canceled shares
+  function getCanceledShares(items) {
+    return items.reduce((total, item) => item.canceled_shares + total, 0)
+  }
+
+  function getExecutedShares(items) {
+    return items.reduce((total, item) => item.executed_shares + total, 0)
+  }
+
+  //get the 10 stocks with the most orders
+  function getTopTenStockSymbols(item) {
+    let sortable = [];
+    let sorted_stocks = [];
+    let symbol_counts = item.reduce(function (obj, v) {
+      obj[v.stock_symbol] = (obj[v.stock_symbol] || 0) + 1;
+      return obj;
+    }, {})
+    for (let v in symbol_counts) {
+      sortable.push([v, symbol_counts[v]]);
+    }
+    let item_symbol_counts = sortable.sort(function (a, b) {
+      return b[1] - a[1];
+    });
+    for (let i = 0; i < 10; i++) {
+      let stock = item_symbol_counts[i][0];
+      let stock_count = item_symbol_counts[i][1];
+      let data = { 'stock': stock, 'stock_count': stock_count }
+      sorted_stocks.push(data);
+    }
+    return sorted_stocks;
+  }
+
+  //Scroll to name details when clicked up top, and get a dictionary of message names
+  let itemNames = document.querySelectorAll('.item-name');
+  for (let x in itemNames) {
     if (itemNames[x].nodeName === 'SPAN') {
       itemNames[x].addEventListener('click', function () {
-        console.log(this.innerText);
-        var scrollId = document.getElementById(this.innerText);
+        let scrollId = document.getElementById(this.innerText);
         scrollId.scrollIntoView();
       })
     }
   }
-  
-  var labels = [];
-  var chartCounts = [];
-  var maxCount = 0;
-  var j = 0;
-  for (i in counts) {
-    if (counts[i].name !== 'Total Count') {
-      labels.push(counts[i].name);
-      chartCounts.push(counts[i].count);
-      if (j === 0) {
-        maxCount = counts[i].count;
-      } else {
-        if (counts[i].count > maxCount) {
-          maxCount = counts[i].count;
-        }
-      }
-      j++
-    }
-  }
-  let barGraph = document.getElementById('myBarGraph');
-  let pieChart = document.getElementById('myPieChart');
-  function drawBarGraph(data) {
-    var chartLabel = 'File Breakdown'
-    var chartdata = chartCounts;
-    var ctx = barGraph;
-    var myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: chartLabel,
-          data: chartdata,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
-      }
-    });
-  }
 
+  // add order
+  let add_order_div = document.getElementById(add_order[0].message_type_full_name)
+  let add_order_buy = add_order.filter((a) => a.site_indicator === 'B');
+  let add_order_sell = add_order.filter((a) => a.site_indicator === 'S');
+  let totalBuyPrices = numberWithCommas(getTotalBuySellPrices(add_order_buy));
+  let totalSellPrices = numberWithCommas(getTotalBuySellPrices(add_order_sell));
+  let add_orderTopTenStockSymbols = getTopTenStockSymbols(add_order);
+  let add_order_buy_shares = numberWithCommas(getTotalShares(add_order_buy));
+  let add_order_sell_shares = numberWithCommas(getTotalShares(add_order_sell));
+  add_order_div.innerHTML += `<canvas id="Add Order bar graph"></canvas>`
+  add_order_div.innerHTML += `<ul>`
+  add_order_div.innerHTML += `<li>${getAddOrderBuySell().S} <b>SELL</b> orders for a total of ${add_order_sell_shares} shares and $${totalSellPrices}.</li>`;
+  add_order_div.innerHTML += `<li>${getAddOrderBuySell().B} <b>BUY</b> orders for a total of  ${add_order_buy_shares} shares and $${totalBuyPrices}.</li>`;
+  add_order_div.innerHTML += `</ul>`;
+  add_order_div.innerHTML += `<hr />`;
+  add_order_div.innerHTML += `<canvas id="Add Order bar graph 2"></canvas>`
+  add_order_div.innerHTML += `<br /><h5>The 10 stock symbols that showed up the most: </h5>`;
+  add_order_div.innerHTML += `<ol id="add_order_ol" start="1">`;
+  for (var stock in add_orderTopTenStockSymbols) {
+    document.getElementById('add_order_ol').innerHTML += `<li>${add_orderTopTenStockSymbols[stock].stock} with ${add_orderTopTenStockSymbols[stock].stock_count}</li>`
+  }
+  add_order_div.innerHTML += `</ol>`;
 
-  function drawPieGraph(data) {
-    var chartLabel = 'File Breakdown'
-    var chartdata = chartCounts;
-    var ctx = pieChart;
-    var myChart = new Chart(ctx, {
+  //order canceled
+  let order_cancel_div = document.getElementById(order_cancel[0].message_type_full_name);
+  order_cancel.sort((a, b) => a.canceled_shares < b.canceled_shares);
+  let order_cancelMaxShares = order_cancel[0]
+  let order_cancelMinShares = order_cancel[order_cancel.length - 1];
+  let order_cancelCanceledShares = numberWithCommas(getCanceledShares(order_cancel));
+  order_cancel_div.innerHTML += `<ul>`
+  order_cancel_div.innerHTML += `<li>In ${order_cancel.length} messages, ${order_cancelCanceledShares} shares were cancelled.</li>`;
+  order_cancel_div.innerHTML += `<li>The largest cancellation was ${numberWithCommas(order_cancelMaxShares.canceled_shares)} shares in one message.</li>`;
+  order_cancel_div.innerHTML += `<li>The smallest was ${numberWithCommas(order_cancelMinShares.canceled_shares)} cancelled shares.</li>`;
+  order_cancel_div.innerHTML += `<hr />`;
+
+  //trade
+  let trade_div = document.getElementById(trade[0].message_type_full_name);
+  let tradeTopTenStockSymbols = getTopTenStockSymbols(trade);
+  let tradeTotalPrice = numberWithCommas(getTotalBuySellPrices(trade));
+  let tradeTotalShares = numberWithCommas(getTotalShares(trade));
+  trade_div.innerHTML += `<ul>`
+  trade_div.innerHTML += `<li>${trade.length} orders for a total of ${tradeTotalShares} shares and $${tradeTotalPrice}.</li>`;
+  trade_div.innerHTML += `</ul>`;
+  trade_div.innerHTML += `<hr />`;
+  trade_div.innerHTML += `<canvas id="Trade bar graph"></canvas>`
+  trade_div.innerHTML += `<br /><h5>The 10 stock symbols that showed up the most: </h5>`;
+  trade_div.innerHTML += `<ol id="trade_ol" start="1">`;
+  for (var stock in tradeTopTenStockSymbols) {
+    document.getElementById('trade_ol').innerHTML += `<li>${tradeTopTenStockSymbols[stock].stock} with ${tradeTopTenStockSymbols[stock].stock_count}</li>`
+  }
+  trade_div.innerHTML += `</ol>`;
+
+  //order executed 
+  let order_executed_div = document.getElementById(order_executed[0].message_type_full_name);
+  order_executed.sort((a,b) => a.executed_shares < b.executed_shares)
+  let order_executedMaxShares = order_executed[0]
+  let order_executedMinShares = order_executed[order_executed.length - 1];
+  let order_executedExecutedShares = numberWithCommas(getExecutedShares(order_executed));
+  order_executed_div.innerHTML += `<ul>`
+  order_executed_div.innerHTML += `<li>In ${order_executed.length} messages, ${order_executedExecutedShares} shares were executed.</li>`;
+  order_executed_div.innerHTML += `<li>The largest execution was ${numberWithCommas(order_executedMaxShares.executed_shares)} shares in one message.</li>`;
+  order_executed_div.innerHTML += `<li>The smallest was ${numberWithCommas(order_executedMinShares.executed_shares)} executed shares.</li>`;
+  order_executed_div.innerHTML += `<hr />`;
+
+  //visualize pieGraph
+  function visualizePieGraph(chartLabel, chartData, id, labels) {
+    let myChart = new Chart(id, {
       type: 'pie',
       data: {
         labels: labels,
         datasets: [{
           label: chartLabel,
-          data: chartdata,
+          data: chartData,
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
             'rgba(54, 162, 235, 0.2)',
@@ -190,8 +259,99 @@
     });
   }
 
-  drawBarGraph(data);
-  drawPieGraph(data);
+  // function to visualize
+  function visualizeBarGraph(chartLabel, chartData, id, labels) {
+    let myChart = new Chart(id, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: chartLabel,
+          data: chartData,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+  }
+
+  //format data to visualize
+  let allMessageNames = [];
+  let chartCounts = [];
+  let maxCount = 0;
+  let j = 0;
+  for (i in counts) {
+    if (counts[i].name !== 'Total Count') {
+      allMessageNames.push(counts[i].name);
+      chartCounts.push(counts[i].count);
+      if (j === 0) {
+        maxCount = counts[i].count;
+      } else {
+        if (counts[i].count > maxCount) {
+          maxCount = counts[i].count;
+        }
+      }
+      j++
+    }
+  }
+
+  // Visualize initial Bar Graph
+  let barGraph = document.getElementById('myBarGraph');
+  visualizeBarGraph('Message Count', chartCounts, barGraph, allMessageNames)
+
+  // Visualize initial Pie Graph
+  let pieChart = document.getElementById('myPieChart');
+  visualizePieGraph('File Breakdown', chartCounts, pieChart, allMessageNames)
+
+  // Visualize Add order Price bar graph
+  let add_orderPriceBarGraph = document.getElementById('Add Order bar graph');
+  visualizeBarGraph('Sell vs Buy Counts', [getAddOrderBuySell().S, getAddOrderBuySell().B], add_orderPriceBarGraph, ['Sell', 'Buy'])
+
+  // Visualize Add order Stock bar graph
+  let add_orderStockBarGraph = document.getElementById('Add Order bar graph 2');
+  let stockNames = [];
+  let stockCounts = [];
+  for (var i in add_orderTopTenStockSymbols) {
+    stockNames.push(add_orderTopTenStockSymbols[i].stock);
+    stockCounts.push(add_orderTopTenStockSymbols[i].stock_count);
+  }
+  visualizeBarGraph('Top 10 Stocks by Count', stockCounts, add_orderStockBarGraph, stockNames)
+
+  // Visualize trade stock bar graph
+  let tradeStockBarGraph = document.getElementById('Trade bar graph');
+  stockNames = [];
+  stockCounts = [];
+  for (var i in tradeTopTenStockSymbols) {
+    stockNames.push(tradeTopTenStockSymbols[i].stock);
+    stockCounts.push(tradeTopTenStockSymbols[i].stock_count);
+  }
+  visualizeBarGraph('Top 10 Stocks by Count', stockCounts, tradeStockBarGraph, stockNames)
+
+  //add button logic to change graphs
   document.getElementById('changeGraphButton').addEventListener('click', function () {
     console.log(this.value);
     if (this.value === 'bar') {
@@ -206,17 +366,11 @@
       this.innerText = 'Show as Pie Chart'
     }
   })
-  //drawPieGraph(data, 'myChartBar')
-  let details = document.querySelectorAll('.message-details');
-  function populateDetails(json) {
-    for(var array in json){
-      var json2 = json[array]
-      for(var array2 in json2){
-        document.getElementById(json2[array2].message_type_full_name).innerHTML += `<p>${json2[array2]}</p>`
-      }
-    }
-  }
-  //populateDetails(resultsWithData)
+
+
+
+
 
 </script>
+
 {% endblock %}

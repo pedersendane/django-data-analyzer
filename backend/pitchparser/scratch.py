@@ -282,3 +282,31 @@ def pitch_parser(iterable):
   return message_types
 
 
+{% if message.name == 'Add Order' %}
+    {% for entry in data.add_order%}
+
+    {% endfor %}
+
+    {% elif message.name == 'Add Order (Long)' %}
+    {{data.add_order_long}}
+    {% elif message.name == 'Auction Summary' %}
+    {{data.auction_summary}}
+    {% elif message.name == 'Auction Update' %}
+    {{data.auction_update}}
+    {% elif message.name == 'Order Cancel' %}
+    {{data.order_cancel}}
+    {% elif message.name == 'Order Executed' %}
+    {{data.order_executed}}
+    {% elif message.name == 'Trade' %}
+    {{data.trade}}
+    {% elif message.name == 'Trade (Long)' %}
+    {{data.trade_long}}
+    {% elif message.name == 'Trade Break' %}
+    {{data.trade_break}}
+    {% elif message.name == 'Trading Status' %}
+    {{data.trading_status}}
+    {% elif message.name == 'Symbol Clear' %}
+    {{data.symbol_clear}}
+    {% elif message.name == 'Retail Price Improvement' %}
+    {{data.retail_price_improvement}}
+    {% endif %}
